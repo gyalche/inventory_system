@@ -1,6 +1,6 @@
 import User from '../model/userModel.js';
 import asyncHandler from 'express-async-handler';
-import bcrypt from 'bcryptjs';
+// import bcrypt from 'bcryptjs';
 export const registerUser = asyncHandler(async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -20,11 +20,11 @@ export const registerUser = asyncHandler(async (req, res) => {
       throw new Error('Email is already in use');
     }
     // encrypt password;
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-
+    // const salt = await bcrypt.genSalt(10);
+    // const hashedPassword = await bcrypt.hash(password, salt);
+    // password has been already hashed in model go and check;
     //Create new user;
-    const user = await User.create({ email, name, password: hashedPassword });
+    const user = await User.create({ email, name, password });
     if (user) {
       await user.save();
       res.status(201).json(user);
