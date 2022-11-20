@@ -8,6 +8,7 @@ import bodyParser from 'body-parser';
 import userRoutes from './routes/userRoutes.js';
 //error handler import;
 import { errorHandler } from './middleware/errorMiddleware.js';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 dotenv.config();
@@ -16,6 +17,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(morgan('dev'));
 app.use(cors());
+app.use(cookieParser());
+
 //database connection
 mongo();
 
