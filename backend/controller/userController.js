@@ -104,6 +104,16 @@ export const logoutUser = asyncHandler(async (req, res) => {
     sameSite: 'none',
     secure: true,
   });
-
   return res.status(200).json('Successfully logged out');
+});
+
+//get user;
+export const getUser = asyncHandler(async (req, res) => {
+  const user = User.findById(req.user._id);
+  if (user) {
+    res.status(200).json(user);
+  } else {
+    res.status(400);
+    throw new Error('User not found');
+  }
 });
