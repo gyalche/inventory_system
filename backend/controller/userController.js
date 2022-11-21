@@ -117,3 +117,17 @@ export const getUser = asyncHandler(async (req, res) => {
     throw new Error('User not found');
   }
 });
+
+//get login status;
+export const loginStatus = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.json(false);
+  } else {
+    //verify token;
+    const verify = jwt.verify(token, process.env.JWT_SECRET);
+    if (verify) {
+      return res.json(true);
+    }
+  }
+};
