@@ -131,3 +131,24 @@ export const loginStatus = (req, res, next) => {
     }
   }
 };
+
+//update user;
+export const updateUser = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+  if (user) {
+    const { _id, name, email, photo, phone, bio } = user;
+    user.email = email;
+    user.name = req.body.name || name;
+    user.photo = req.body.photo || photo;
+    user.phone = req.body.phone || phone;
+    user.bio = req.body.bio || bio;
+  }
+
+  const updatedUser = await user.save();
+  if (updatedUser) {
+    res.status(200).json('Successfully updated', updatedUser);
+  } else {
+    res.status(404);
+    throw new Error('Could not update user');
+  }
+});
