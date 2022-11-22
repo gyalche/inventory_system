@@ -4,6 +4,7 @@ import {
   loginStatus,
   loginUser,
   logoutUser,
+  passwordUpdate,
   registerUser,
   updateUser,
 } from '../controller/userController.js';
@@ -15,6 +16,7 @@ router.post('/login', loginUser);
 router.get('/logout', logoutUser);
 router.get('/getuser', protect, getUser);
 router.get('/loggedin', loginStatus);
-router.patch('/updateuser', protect, updateUser);
+router.put('/updateuser', protect, updateUser);
+router.put('/passwordupdate', protect, passwordUpdate);
 
 export default router;
