@@ -181,3 +181,7 @@ export const passwordUpdate = asyncHandler(async (req, res) => {
     throw new Error('Old password is incorrect');
   }
 });
+
+//Forgot Password;
+
+export const forgotPassword = (req, res) => {};

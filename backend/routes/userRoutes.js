@@ -1,5 +1,6 @@
 import express from 'express';
 import {
+  forgotPassword,
   getUser,
   loginStatus,
   loginUser,
@@ -18,5 +19,6 @@ router.get('/getuser', protect, getUser);
 router.get('/loggedin', loginStatus);
 router.put('/updateuser', protect, updateUser);
 router.put('/passwordupdate', protect, passwordUpdate);
+router.post('/forgotpassword', forgotPassword);
 
 export default router;
