@@ -2,6 +2,8 @@ import User from '../model/userModel.js';
 import asyncHandler from 'express-async-handler';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import Token from '../model/tokenModel.js';
+import crypto from 'crypto';
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '1d' });
@@ -183,5 +185,43 @@ export const passwordUpdate = asyncHandler(async (req, res) => {
 });
 
 //Forgot Password;
+export const forgotPassword = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  const user = await User.findOne({ email: email });
+  if (!user) {
+    res.status(404);
+    throw new Error('User doesnt not exist');
+  }
+  //Create Reset token;
+  let resetToken = crypto.randomBytes(32).toString('hex') + user._id;
+  //has token  before saving to DB
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
 
-export const forgotPassword = (req, res) => {};
+  //save token to DB;
+  await new Token({
+    userId: user._id,
+    token: hashedToken,
+    createdAt: Date.now(),
+    expiresAt: Date.now() + 30 * (60 * 1000), //thirty minutes;
+  }).save();
+
+  //construct rest url;
+  const resetUrl = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+
+  //construct reset email;
+  const message = `<h2>Hellow ${user.name}</h2>
+    <p>Please user the url below to reset your password</p>
+    <p>The reset link is valid for 30 minute</p>
+
+    <a href=${resetUrl} clicktracking=off>${resetUrl}</a>
+
+    <p>regards</p>
+    <p>Dawa dons company</p>
+  `;
+
+  console.log(hashedToken);
+  res.send('Forgot password');
+});
